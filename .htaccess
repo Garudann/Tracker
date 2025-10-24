@@ -1,0 +1,12 @@
+# Turn on rewrite engine and hide [index.php](http://_vscodecontentref_/1)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /ci3_admin/
+
+    # Allow existing files/directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Redirect all to [index.php](http://_vscodecontentref_/2)
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
