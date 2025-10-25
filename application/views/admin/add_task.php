@@ -56,6 +56,77 @@
             color: white !important;
             font-weight: bold;
         }
+        .create-task-table{
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 10px 50px;
+        }
+        .input{
+            position: relative;
+            width: 100%;
+            height: 30px;
+            margin: 0px;
+            background: transparent;
+        }
+        .input.input{
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            border: 2px solid rgb(255,255,225,.2);
+            border-radius: 40px;
+            font-size: 15px;
+            color: #fff;
+            padding: 20px 45px 20px 20px;
+        }
+        .input.input::placeholder{
+            color: #fff;
+        }
+        .btn{
+            width: 20%;
+            height: 35px;
+            margin-top: 10px;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgb(0, 0, 0 .1);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            border-color: black;
+            border-width: 2px;
+            border-radius: 15px;
+            border-style: solid;
+            align-items: center;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        #employee_select {
+            width: 100%;
+            padding: 8px 12px;
+            border-color: black;
+            border-width: 2px;
+            border-radius: 15px;
+            border-style: solid;
+            background: transparent;
+            color: #fff;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+        }
+        #employee_select option {
+            background: transparent;
+            color: #fff;
+            border-radius: 15px;
+        }
     </style>
 </head>
 <body>
@@ -68,20 +139,20 @@
                 <table style="width:100%; gap:15px;" class="create-task-table">
                     <tr>
                         <td><label for="title">Title *</label></td>
-                        <td><input type="text" id="title" name="title" required placeholder="Enter task title" style="width:100%; padding:8px; border-radius:5px; border:none;"/></td>
+                        <td><input type="text" id="title" name="title" required placeholder="Enter task title" class="input"/></td>
                     </tr>
                     <tr>
                         <td><label for="description">Description *</label></td>
-                        <td><textarea id="description" name="description" required placeholder="Enter task description" style="width:100%; padding:8px; border-radius:5px; border:none;"></textarea></td>
+                        <td><textarea id="description" name="description" required placeholder="Enter task description" class="input"></textarea></td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td><label for="due_date">Due Date *</label></td>
-                        <td><input type="date" id="due_date" name="due_date" required style="width:100%; padding:8px; border-radius:5px; border:none;"/></td>
-                    </tr>
+                        <td><input type="date" id="due_date" name="due_date" required class="input"/></td>
+                    </tr> -->
                     <tr>
                         <td><label for="status">Status *</label></td>
                         <td>
-                            <select id="status" name="status" required style="width:100%; padding:8px; border-radius:5px; border:none;">
+                            <select id="status" name="status" required class="input" disabled>
                                 <option value="0">Backlogs</option>
                                 <option value="1">To Do</option>
                                 <option value="2">In Progress</option>
@@ -95,14 +166,14 @@
                     <tr>
                         <td><label for="assignee">Assign To *</label></td>
                         <td>
-                            <select id="employee_select" name="assignee" required style="width:100%; padding:8px; border-radius:5px; border:none;">
+                            <select id="employee_select" name="assignee" required class="input">
                             </select>
                         </td>
                     </tr>
                 </table>
                 <div class="btn-group">
-                    <button type="submit" class="btn btn-submit">Create Task</button>
-                    <a href="<?= base_url('admin/task_list'); ?>" class="btn btn-cancel">Cancel</a>
+                    <button type="submit" class="btn btn-submit" id="createTaskBtn" style="background-color: #739674ff; color: white;">Create Task</button>
+                    <button type="button" class="btn btn-cancel" id="cancelTaskBtn" style="background-color: #56577cff; color: white;">Cancel</button>
                 </div>
             </form>
         </div>

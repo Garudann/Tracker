@@ -12,7 +12,7 @@ function loadTasks() {
                 taskTable = $('#taskTable').DataTable({
                     "columnDefs": [
                         {
-                            targets: [1, 2, 3, 4, 5, 6],
+                            targets: [1, 2, 3, 4, 5],
                             className: 'dt-body-left'
                         },
                         {
@@ -20,7 +20,7 @@ function loadTasks() {
                             className: 'dt-body-center'
                         },
                         {
-                            targets: [7],
+                            targets: [6],
                             className: 'actions'
                         }
                     ],
@@ -75,13 +75,13 @@ function loadTasks() {
                 ]).draw(false);
             } else {
                 tasks.forEach(function(task){
-                    var statusClass = task.status ? task.status.replace(/\s+/g, '-') : '';
+                    // var statusClass = task.status ? task.status.replace(/\s+/g, '-') : '';
                     taskTable.row.add([
                         task.id || '',
                         task.title || '',
                         task.description || '',
-                        task.due_date || '',
-                        `<span class="status ${statusClass}">${task.status || ''}</span>`,
+                        // task.due_date || '',
+                        task.status || '',
                         task.created_emp || '',
                         task.created_at || '',
                         `<a href="#" class="edit-link">Edit</a> | <a href="#" class="delete-link">Delete</a>`
@@ -126,4 +126,48 @@ $(document).ready(function(){
     if (ctrl_page.length > 3 && ctrl_page[3] === 'Add_task') {
         get_active_employees();
     }
+});
+$('#createTaskBtn').on('click', function(e) {
+    e.preventDefault();
+    var title = $('#title').val().trim();
+    var description = $('#description').val().trim();
+    // var due_date = $('#due_date').val().trim();
+    var employee_id = $('#employee_select').val();
+    var assignee = $('#employee_select option:selected').text();
+    if (!title || !description || !employee_id) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+    $.ajax({
+        url: base_url + "admin/save_task",
+        method: "POST",
+        data: {
+            title: title,
+            description: description,
+            assignee: employee_id,
+            assignee_name: assignee
+        },
+        success: function(response) {
+            try {
+            var res = JSON.parse(response);
+            if (res.status === 'success') {
+                alert(res.message);
+                window.location.href = base_url + "admin/task_list";
+            } else {
+                alert(res.message);
+            }
+        } catch (e) {
+            console.error("Invalid JSON response", e);
+            alert("Something went wrong.");
+        }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error creating task:', error);
+            alert('Failed to create task');
+        }
+    });
+});
+$('#cancelTaskBtn').on('click', function(e) {
+    e.preventDefault();
+    window.location.href = base_url + "admin/task_list";
 });

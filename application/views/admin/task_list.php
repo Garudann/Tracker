@@ -13,7 +13,7 @@
                     <th>ID</th>
                     <th>Title</th>
                     <th>Description</th>
-                    <th>Due Date</th>
+                    <!-- <th>Due Date</th> -->
                     <th>Status</th>
                     <th>Created By</th>
                     <th>Created At</th>
