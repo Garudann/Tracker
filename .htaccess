@@ -1,7 +1,7 @@
 # Turn on rewrite engine and hide [index.php](http://_vscodecontentref_/1)
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /ci3_admin/
+    RewriteBase /track/
 
     # Allow existing files/directories
     RewriteCond %{REQUEST_FILENAME} !-f
