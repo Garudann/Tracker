@@ -134,7 +134,8 @@ $('#createTaskBtn').on('click', function(e) {
     // var due_date = $('#due_date').val().trim();
     var employee_id = $('#employee_select').val();
     var assignee = $('#employee_select option:selected').text();
-    if (!title || !description || !employee_id) {
+    var category = $('#category option:selected').val();
+    if (!title || !description || !employee_id || !category) {
         alert('Please fill in all required fields.');
         return;
     }
@@ -145,7 +146,8 @@ $('#createTaskBtn').on('click', function(e) {
             title: title,
             description: description,
             assignee: employee_id,
-            assignee_name: assignee
+            assignee_name: assignee,
+            category: category
         },
         success: function(response) {
             try {

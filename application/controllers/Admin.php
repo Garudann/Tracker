@@ -61,6 +61,7 @@ class Admin extends CI_Controller {
         $title = $this->input->post('title');
         $description = $this->input->post('description');
         $assignee = $this->input->post('assignee');
+        $category = $this->input->post('category');
 
         $task_data = [
             'title' => $title,
@@ -68,7 +69,8 @@ class Admin extends CI_Controller {
             'status' => 0,
             'created_by' => $this->session->userdata('uid'),
             'created_at' => date('Y-m-d H:i:s'),
-            'assignto' => $assignee
+            'assignto' => $assignee,
+            'category' => $category
         ];
 
         $insert_id = $this->Admin_Model->insert_task($task_data);

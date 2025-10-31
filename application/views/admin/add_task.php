@@ -138,6 +138,16 @@
             <form action="<?= base_url('admin/save_task'); ?>" method="POST" id="taskForm">
                 <table style="width:100%; gap:15px;" class="create-task-table">
                     <tr>
+                        <td><label for="Category">Category *</label></td>
+                        <td>
+                            <select id="category" name="category" required class="input">
+                                <option value="1">Bug</option>
+                                <option value="2">New Requirement</option>
+                                <option value="3">Change Requirement</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <td><label for="title">Title *</label></td>
                         <td><input type="text" id="title" name="title" required placeholder="Enter task title" class="input"/></td>
                     </tr>
