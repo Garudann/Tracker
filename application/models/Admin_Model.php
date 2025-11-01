@@ -16,13 +16,13 @@ class Admin_model extends CI_Model {
 
     public function get_all_tasks() {
         $sql = "SELECT t.id, t.title, t.description, CASE 
-                        WHEN t.status = 0 THEN 'Backlog' 
-                        WHEN t.status = 1 THEN 'Todo' 
-                        WHEN t.status = 2 THEN 'In Progress'
-                        WHEN t.status = 3 THEN 'In Review'
-                        WHEN t.status = 4 THEN 'Approved'
-                        WHEN t.status = 5 THEN 'Rejected'
+                        WHEN t.status = 1 THEN 'Backlog' 
+                        WHEN t.status = 2 THEN 'Todo' 
+                        WHEN t.status = 3 THEN 'In Progress'
+                        WHEN t.status = 4 THEN 'In Review'
+                        WHEN t.status = 5 THEN 'Approved'
                         WHEN t.status = 6 THEN 'Completed'
+                        WHEN t.status = 7 THEN 'Rejected'
                         ELSE '-' 
                     END AS status,
                     e.name AS created_emp, t.created_at
@@ -39,6 +39,11 @@ class Admin_model extends CI_Model {
 
     public function insert_task($data) {
         return $this->db->insert('tasks', $data);
+    }
+
+    public function get_task_status(){
+        $sql = "select name, id from taskstatus where STATUS=1";
+        return $this->db->query($sql)->result();
     }
 
 }

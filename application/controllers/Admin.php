@@ -66,7 +66,7 @@ class Admin extends CI_Controller {
         $task_data = [
             'title' => $title,
             'description' => $description,
-            'status' => 0,
+            'status' => 1,
             'created_by' => $this->session->userdata('uid'),
             'created_at' => date('Y-m-d H:i:s'),
             'assignto' => $assignee,
@@ -76,10 +76,21 @@ class Admin extends CI_Controller {
         $insert_id = $this->Admin_Model->insert_task($task_data);
 
         if ($insert_id) {
-            echo json_encode(['status' => 'success', 'message' => 'Task created successfully']);
+            echo json_encode(['status' => 'success', 'message' => 'Task created successfully..']);
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Failed to create task']);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to create task!']);
         }
+    }
+
+    public function get_taskstatus() {
+        if (!$this->session->userdata('uid')) {
+            echo json_encode([]);
+            return;
+        }
+        $this->load->model('Admin_Model');
+        $status = $this->Admin_Model->get_task_status();
+
+        echo json_encode($status);
     }
 
 }

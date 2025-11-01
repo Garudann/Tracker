@@ -109,24 +109,43 @@
             margin-top: 30px;
         }
         #employee_select {
-            width: 100%;
-            padding: 8px 12px;
-            border-color: black;
-            border-width: 2px;
-            border-radius: 15px;
-            border-style: solid;
-            background: transparent;
-            color: #fff;
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
             cursor: pointer;
         }
         #employee_select option {
-            background: transparent;
-            color: #fff;
+            background-color: transparent;
             border-radius: 15px;
+            color: #050303ff;
+            padding: 8px;
         }
+        #category option {
+        background-color: transparent;
+        border-radius: 15px;
+        color: #050303ff;
+        padding: 8px;
+    }
+    
+    #category {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: pointer;
+    }
+    #status{
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: not-allowed;
+        color: white;
+    }
+    #status option {
+        background-color: transparent;
+        border-radius: 15px;
+        color: #050303ff;
+        padding: 8px;
+    }
     </style>
 </head>
 <body>
@@ -155,22 +174,10 @@
                         <td><label for="description">Description *</label></td>
                         <td><textarea id="description" name="description" required placeholder="Enter task description" class="input"></textarea></td>
                     </tr>
-                    <!-- <tr>
-                        <td><label for="due_date">Due Date *</label></td>
-                        <td><input type="date" id="due_date" name="due_date" required class="input"/></td>
-                    </tr> -->
                     <tr>
                         <td><label for="status">Status *</label></td>
                         <td>
-                            <select id="status" name="status" required class="input" disabled>
-                                <option value="0">Backlogs</option>
-                                <option value="1">To Do</option>
-                                <option value="2">In Progress</option>
-                                <option value="3">In Review</option>
-                                <option value="4">Approved</option>
-                                <option value="5">Rejected</option>
-                                <option value="6">Completed</option>
-                            </select>
+                            <select id="status" name="status" required class="input" disabled></select>
                         </td>
                     </tr>
                     <tr>

@@ -125,6 +125,7 @@ $(document).ready(function(){
     }
     if (ctrl_page.length > 3 && ctrl_page[3] === 'Add_task') {
         get_active_employees();
+        get_activeTaskStatus();
     }
 });
 $('#createTaskBtn').on('click', function(e) {
@@ -173,3 +174,26 @@ $('#cancelTaskBtn').on('click', function(e) {
     e.preventDefault();
     window.location.href = base_url + "admin/task_list";
 });
+function get_activeTaskStatus(){
+    $.ajax({
+        url: base_url + "admin/get_taskstatus",
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+            var select = $('#status');
+            console.log("Active task statuses:", data);
+            select.empty();
+            if (data && data.length > 0) {
+                $.each(data, function(index, status) {
+                    select.append($('<option></option>').val(status.id).text(status.name));
+                });
+            } else {
+                select.append($('<option></option>').val('').text('No active task statuses found'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading active task statuses:', error);
+            alert('Failed to load active task statuses');
+        }
+    });
+}
