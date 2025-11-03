@@ -84,10 +84,6 @@ table th, table td {
     border: 1px solid #cfc4c4ff;
 }
 table th { backdrop-filter: blur(5px); color: white; text-align: center; }
-table tr:nth-child(even) { background: rgba(255,255,255,0.1); }
-.status { font-weight: bold; text-transform: capitalize; }
-.status.Pending { color: orange; }
-.status.Completed { color: #28a745; }
 .actions a {
     text-decoration: none;
     margin-right: 8px;
@@ -107,3 +103,6 @@ table tr:nth-child(even) { background: rgba(255,255,255,0.1); }
     var base_url = "<?= base_url(); ?>";
 </script>
 <script src="<?= base_url('assets/js/general.js'); ?>"></script>
+<script>
+    var currentUserId = "<?= $this->session->userdata('uid'); ?>";
+</script>   

@@ -25,7 +25,7 @@ class Admin_model extends CI_Model {
                         WHEN t.status = 7 THEN 'Rejected'
                         ELSE '-' 
                     END AS status,
-                    e.name AS created_emp, t.created_at
+                    e.name AS created_emp, t.created_at, t.created_by,t.assignto,t.status AS status_id
                 FROM tasks t
                 JOIN employee e ON t.created_by = e.id
                 ORDER BY t.created_at DESC";

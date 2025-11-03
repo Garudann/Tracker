@@ -93,4 +93,19 @@ class Admin extends CI_Controller {
         echo json_encode($status);
     }
 
+    function update_task_status() {
+        $task_id = $this->input->post('task_id');
+        $new_status = $this->input->post('status_id');
+        $this->load->model('Admin_Model');
+        $update_data = ['status' => $new_status];
+        $this->db->where('id', $task_id);
+        $updated = $this->db->update('tasks', $update_data);
+
+        if ($updated) {
+            echo json_encode(['status' => 'success', 'message' => 'Task status updated successfully.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to update task status.']);
+        }
+    }
+
 }

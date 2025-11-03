@@ -1,97 +1,33 @@
 var taskTable;
 var ctrl_page = window.location.pathname.split('/');
-
-function loadTasks() {
+let taskStatuses = [];
+function get_activeTaskStatus(selectIds = ['#status', '#markas'], callback = null) {
     $.ajax({
-        url: base_url + "admin/get_tasks",
+        url: base_url + "admin/get_taskstatus",
         method: "GET",
         dataType: "json",
-        success: function(tasks) {
-            console.log("Tasks list", tasks);
-            if (!taskTable) {
-                taskTable = $('#taskTable').DataTable({
-                    "columnDefs": [
-                        {
-                            targets: [1, 2, 3, 4, 5],
-                            className: 'dt-body-left'
-                        },
-                        {
-                            targets: [0],
-                            className: 'dt-body-center'
-                        },
-                        {
-                            targets: [6],
-                            className: 'actions'
-                        }
-                    ],
-                    "ordering": true,
-                    "paging": true,
-                    "searching": true,
-                    "autoWidth": false,
-                    "createdRow": function(row, data, dataIndex) {
-                        var status = data[4];
-                        var color = 'white';
-                        if (status === 'Completed') color = 'green';
-                        else if (status === 'Pending') color = 'orange';
-                        else if (status === 'In Progress') color = 'yellow';
-                        $(row).css('color', color);
-                    },
-                    "initComplete": function() {
-                        $('.dataTables_paginate .paginate_button a').css('color', 'white');
-                    }
-                });
-                
-                $('#taskTable_length').css({
-                    'display': 'flex',
-                    'justify-content': 'end',
-                    'align-items': 'center',
-                    'margin-bottom': '10px',
-                    'gap': '8px'
-                });
-                $('#taskTable_length label').css({
-                    'font-weight': 'bold',
-                    'color': '#ffffffff'
-                });
-                $('#taskTable_length select').css({
-                    'border': '1px solid #666',
-                    'border-radius': '6px',
-                    'padding': '4px 8px',
-                    'background': 'transparent',
-                    'color': '#ffffff',
-                    'cursor': 'pointer'
-                });
-                $('#taskTable_length select option').css({
-                    'background-color': '#333',
-                    'color': '#fff',
-                    'font-size': '14px',
-                    'padding': '5px'
-                });
-            }
-            
-            taskTable.clear();
-            if (!tasks || tasks.length === 0) {
-                taskTable.row.add([
-                    'No data', 'No data', 'No tasks found', 'No data', 'No data', 'No data', 'No data', 'No data'
-                ]).draw(false);
-            } else {
-                tasks.forEach(function(task){
-                    // var statusClass = task.status ? task.status.replace(/\s+/g, '-') : '';
-                    taskTable.row.add([
-                        task.id || '',
-                        task.title || '',
-                        task.description || '',
-                        // task.due_date || '',
-                        task.status || '',
-                        task.created_emp || '',
-                        task.created_at || '',
-                        `<a href="#" class="edit-link">Edit</a> | <a href="#" class="delete-link">Delete</a>`
-                    ]).draw(false);
-                });
-            }
+        success: function(data) {
+            // console.log("Active task statuses:", data);
+            taskStatuses = data || [];
+            selectIds.forEach(function(id) {
+                var select = $(id);
+                if (select.length === 0) return;
+                select.empty();
+
+                if (taskStatuses.length > 0) {
+                    select.append('<option value="">Select Status</option>');
+                    $.each(taskStatuses, function(index, status) {
+                        select.append($('<option></option>').val(status.id).text(status.name));
+                    });
+                } else {
+                    select.append('<option value="">No active task statuses found</option>');
+                }
+            });
+            if (typeof callback === "function") callback();
         },
         error: function(xhr, status, error) {
-            console.error('Error loading tasks:', error);
-            alert('Failed to load tasks');
+            console.error('Error loading active task statuses:', error);
+            alert('Failed to load active task statuses');
         }
     });
 }
@@ -119,20 +55,123 @@ function get_active_employees() {
     });
 }
 
-$(document).ready(function(){
-    if (ctrl_page.length > 3 && ctrl_page[3] === 'task_list') {
-        loadTasks();
-    }
-    if (ctrl_page.length > 3 && ctrl_page[3] === 'Add_task') {
-        get_active_employees();
-        get_activeTaskStatus();
-    }
+function loadTasks() {
+    $.ajax({
+        url: base_url + "admin/get_tasks",
+        method: "GET",
+        dataType: "json",
+        success: function(tasks) {
+            console.log("Tasks list", tasks);
+            if (!taskTable) {
+                taskTable = $('#taskTable').DataTable({
+                    "columnDefs": [
+                        { targets: [1, 2, 3, 4, 5], className: 'dt-body-left' },
+                        { targets: [0], className: 'dt-body-center' },
+                        { targets: [6], className: 'actions' }
+                    ],
+                    "ordering": true,
+                    "paging": true,
+                    "searching": true,
+                    "autoWidth": false,
+                    "createdRow": function(row, data, dataIndex) {
+                        var status = $(row).find("select.markas option:selected").text() || data[3];
+                        $(row).css('color', 'white');
+                    },
+                    "initComplete": function() {
+                        $('.dataTables_paginate .paginate_button a').css('color', 'white');
+                    }
+                });
+
+                $('#taskTable_length').css({
+                    'display': 'flex',
+                    'justify-content': 'end',
+                    'align-items': 'center',
+                    'margin-bottom': '10px',
+                    'gap': '8px'
+                });
+                $('#taskTable_length label').css({
+                    'font-weight': 'bold',
+                    'color': '#ffffffff'
+                });
+                $('#taskTable_length select').css({
+                    'border': '1px solid #666',
+                    'border-radius': '6px',
+                    'padding': '4px 8px',
+                    'background': 'transparent',
+                    'color': '#ffffff',
+                    'cursor': 'pointer'
+                });
+                $('#taskTable_length select option').css({
+                    'background-color': '#333',
+                    'color': '#fff',
+                    'font-size': '14px',
+                    'padding': '5px'
+                });
+            }
+
+            taskTable.clear();
+            if (!tasks || tasks.length === 0) {
+                taskTable.row.add([
+                    'No data', 'No data', 'No tasks found', 'No data', 'No data', 'No data', 'No data'
+                ]).draw(false);
+            } else {
+                tasks.forEach(function(task) {
+                var statusOptions = '<select class="markas" data-task-id="' + task.id + '">';
+                statusOptions += '<option value="">Select Status</option>';
+                taskStatuses.forEach(function(status) {
+                    var selected = (status.id == task.status_id) ? 'selected' : '';
+                    statusOptions += `<option value="${status.id}" ${selected}>${status.name}</option>`;
+                });
+                statusOptions += '</select>';
+                var statusCell = (task.created_by == currentUserId || task.assignto == currentUserId)
+                    ? statusOptions
+                    : task.status || '';
+                var actions = (task.created_by == currentUserId || task.assignto == currentUserId)
+                    ? `<a href="#" class="edit-link">Edit</a> | <a href="#" class="delete-link">Delete</a>`
+                    : `<span style="color:#aaa;">No actions</span>`;
+                taskTable.row.add([
+                    task.id || '',
+                    task.title || '',
+                    task.description || '',
+                    statusCell,
+                    task.created_emp || '',
+                    task.created_at || '',
+                    actions
+                ]).draw(false);
+            });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading tasks:', error);
+            alert('Failed to load tasks');
+        }
+    });
+}
+
+$(document).on('change', '.markas', function() {
+    var taskId = $(this).data('task-id');
+    var selectedStatus = $(this).val();
+    var selectedText = $(this).find('option:selected').text();
+
+    if (!selectedStatus) return;
+
+    $.ajax({
+        url: base_url + "admin/update_task_status",
+        method: "POST",
+        data: {
+            task_id: taskId,
+            status_id: selectedStatus
+        },
+        dataType: "json",
+        error: function(xhr, status, error) {
+            console.error("Error updating task status:", error);
+        }
+    });
 });
 $('#createTaskBtn').on('click', function(e) {
     e.preventDefault();
     var title = $('#title').val().trim();
     var description = $('#description').val().trim();
-    // var due_date = $('#due_date').val().trim();
     var employee_id = $('#employee_select').val();
     var assignee = $('#employee_select option:selected').text();
     var category = $('#category option:selected').val();
@@ -152,17 +191,17 @@ $('#createTaskBtn').on('click', function(e) {
         },
         success: function(response) {
             try {
-            var res = JSON.parse(response);
-            if (res.status === 'success') {
-                alert(res.message);
-                window.location.href = base_url + "admin/task_list";
-            } else {
-                alert(res.message);
+                var res = JSON.parse(response);
+                if (res.status === 'success') {
+                    alert(res.message);
+                    window.location.href = base_url + "admin/task_list";
+                } else {
+                    alert(res.message);
+                }
+            } catch (e) {
+                console.error("Invalid JSON response", e);
+                alert("Something went wrong.");
             }
-        } catch (e) {
-            console.error("Invalid JSON response", e);
-            alert("Something went wrong.");
-        }
         },
         error: function(xhr, status, error) {
             console.error('Error creating task:', error);
@@ -174,26 +213,12 @@ $('#cancelTaskBtn').on('click', function(e) {
     e.preventDefault();
     window.location.href = base_url + "admin/task_list";
 });
-function get_activeTaskStatus(){
-    $.ajax({
-        url: base_url + "admin/get_taskstatus",
-        method: "GET",
-        dataType: "json",
-        success: function(data) {
-            var select = $('#status');
-            console.log("Active task statuses:", data);
-            select.empty();
-            if (data && data.length > 0) {
-                $.each(data, function(index, status) {
-                    select.append($('<option></option>').val(status.id).text(status.name));
-                });
-            } else {
-                select.append($('<option></option>').val('').text('No active task statuses found'));
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error loading active task statuses:', error);
-            alert('Failed to load active task statuses');
-        }
-    });
-}
+$(document).ready(function() {
+    if (ctrl_page.length > 3 && ctrl_page[3] === 'task_list') {
+        get_activeTaskStatus([], loadTasks);
+    }
+    if (ctrl_page.length > 3 && ctrl_page[3] === 'Add_task') {
+        get_active_employees();
+        get_activeTaskStatus();
+    }
+});
