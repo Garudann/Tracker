@@ -108,6 +108,24 @@ function loadTasks() {
                     'padding': '5px'
                 });
             }
+            $('#taskTable').on('draw.dt', function() {
+                $('.markas').css({
+                    'background-color': '#222',
+                    'color': '#fff',
+                    'border': '1px solid #555',
+                    'border-radius': '6px',
+                    'padding': '4px 8px',
+                    'font-size': '14px',
+                    'cursor': 'pointer',
+                    'width': '100%',
+                    'outline': 'none'
+                });
+
+                $('.markas option').css({
+                    'background-color': '#333',
+                    'color': '#fff'
+                });
+            });            
 
             taskTable.clear();
             if (!tasks || tasks.length === 0) {

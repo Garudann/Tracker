@@ -146,6 +146,36 @@
         color: #050303ff;
         padding: 8px;
     }
+    #category{
+        background: transparent;
+        color: #fff;
+        border: 1px solid #555;
+        border-radius: 15px;
+        padding: 15px;
+        font-size: 14px;
+        cursor: pointer;
+        width: 100%;
+        outline: none;
+    }
+    #category option{
+        background-color: #333;
+        color: #fff;
+    }
+    #employee_select{
+        background: transparent;
+        color: #fff;
+        border: 1px solid #555;
+        border-radius: 15px;
+        padding: 15px;
+        font-size: 14px;
+        cursor: pointer;
+        width: 100%;
+        outline: none;
+    }
+    #employee_select option{
+        background-color: #333;
+        color: #fff;
+    }
     </style>
 </head>
 <body>
@@ -174,12 +204,12 @@
                         <td><label for="description">Description *</label></td>
                         <td><textarea id="description" name="description" required placeholder="Enter task description" class="input"></textarea></td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td><label for="status">Status *</label></td>
                         <td>
                             <select id="status" name="status" required class="input" disabled></select>
                         </td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td><label for="assignee">Assign To *</label></td>
                         <td>
