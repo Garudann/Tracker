@@ -6,17 +6,17 @@ function get_activeTaskStatus(selectIds = ['#status', '#markas'], callback = nul
         url: base_url + "admin/get_taskstatus",
         method: "GET",
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
             // console.log("Active task statuses:", data);
             taskStatuses = data || [];
-            selectIds.forEach(function(id) {
+            selectIds.forEach(function (id) {
                 var select = $(id);
                 if (select.length === 0) return;
                 select.empty();
 
                 if (taskStatuses.length > 0) {
                     select.append('<option value="">Select Status</option>');
-                    $.each(taskStatuses, function(index, status) {
+                    $.each(taskStatuses, function (index, status) {
                         select.append($('<option></option>').val(status.id).text(status.name));
                     });
                 } else {
@@ -25,7 +25,7 @@ function get_activeTaskStatus(selectIds = ['#status', '#markas'], callback = nul
             });
             if (typeof callback === "function") callback();
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error('Error loading active task statuses:', error);
             alert('Failed to load active task statuses');
         }
@@ -36,19 +36,19 @@ function get_active_employees() {
         url: base_url + "admin/get_active_employees",
         method: "GET",
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
             var select = $('#employee_select');
             console.log("Active employees:", data);
             select.empty();
             if (data && data.length > 0) {
-                $.each(data, function(index, employee) {
+                $.each(data, function (index, employee) {
                     select.append($('<option></option>').val(employee.id).text(employee.name));
                 });
             } else {
                 select.append($('<option></option>').val('').text('No active employees found'));
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error('Error loading active employees:', error);
             alert('Failed to load active employees');
         }
@@ -60,7 +60,7 @@ function loadTasks() {
         url: base_url + "admin/get_tasks",
         method: "GET",
         dataType: "json",
-        success: function(tasks) {
+        success: function (tasks) {
             console.log("Tasks list", tasks);
             if (!taskTable) {
                 taskTable = $('#taskTable').DataTable({
@@ -73,11 +73,11 @@ function loadTasks() {
                     "paging": true,
                     "searching": true,
                     "autoWidth": false,
-                    "createdRow": function(row, data, dataIndex) {
+                    "createdRow": function (row, data, dataIndex) {
                         var status = $(row).find("select.markas option:selected").text() || data[3];
                         $(row).css('color', 'white');
                     },
-                    "initComplete": function() {
+                    "initComplete": function () {
                         $('.dataTables_paginate .paginate_button a').css('color', 'white');
                     }
                 });
@@ -108,7 +108,7 @@ function loadTasks() {
                     'padding': '5px'
                 });
             }
-            $('#taskTable').on('draw.dt', function() {
+            $('#taskTable').on('draw.dt', function () {
                 $('.markas').css({
                     'background-color': '#222',
                     'color': '#fff',
@@ -125,7 +125,7 @@ function loadTasks() {
                     'background-color': '#333',
                     'color': '#fff'
                 });
-            });            
+            });
 
             taskTable.clear();
             if (!tasks || tasks.length === 0) {
@@ -133,40 +133,45 @@ function loadTasks() {
                     'No data', 'No data', 'No tasks found', 'No data', 'No data', 'No data', 'No data'
                 ]).draw(false);
             } else {
-                tasks.forEach(function(task) {
-                var statusOptions = '<select class="markas" data-task-id="' + task.id + '">';
-                statusOptions += '<option value="">Select Status</option>';
-                taskStatuses.forEach(function(status) {
-                    var selected = (status.id == task.status_id) ? 'selected' : '';
-                    statusOptions += `<option value="${status.id}" ${selected}>${status.name}</option>`;
+                tasks.forEach(function (task) {
+                    var statusOptions = '<select class="markas" data-task-id="' + task.id + '">';
+                    statusOptions += '<option value="">Select Status</option>';
+                    taskStatuses.forEach(function (status) {
+                        var selected = (status.id == task.status_id) ? 'selected' : '';
+                        statusOptions += `<option value="${status.id}" ${selected}>${status.name}</option>`;
+                    });
+                    statusOptions += '</select>';
+                    var statusCell = (task.created_by == currentUserId || task.assignto == currentUserId)
+                        ? statusOptions
+                        : task.status || '';
+                    var actions = (task.created_by == currentUserId || task.assignto == currentUserId)
+                        ? `<a href="#" class="edit-link">Edit</a> | <a href="#" class="delete-link">Delete</a>`
+                        : `<span style="color:#aaa;">No actions</span>`;
+                    if (task.status_id == 6) {
+                        $('.markas').prop('disabled', true);
+                    } else {
+                        $('.markas').prop('disabled', false);
+                    }
+                    taskTable.row.add([
+                        task.id || '',
+                        task.title || '',
+                        task.description || '',
+                        statusCell,
+                        task.created_emp || '',
+                        task.created_at || '',
+                        actions
+                    ]).draw(false);
                 });
-                statusOptions += '</select>';
-                var statusCell = (task.created_by == currentUserId || task.assignto == currentUserId)
-                    ? statusOptions
-                    : task.status || '';
-                var actions = (task.created_by == currentUserId || task.assignto == currentUserId)
-                    ? `<a href="#" class="edit-link">Edit</a> | <a href="#" class="delete-link">Delete</a>`
-                    : `<span style="color:#aaa;">No actions</span>`;
-                taskTable.row.add([
-                    task.id || '',
-                    task.title || '',
-                    task.description || '',
-                    statusCell,
-                    task.created_emp || '',
-                    task.created_at || '',
-                    actions
-                ]).draw(false);
-            });
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error('Error loading tasks:', error);
             alert('Failed to load tasks');
         }
     });
 }
 
-$(document).on('change', '.markas', function() {
+$(document).on('change', '.markas', function () {
     var taskId = $(this).data('task-id');
     var selectedStatus = $(this).val();
     var selectedText = $(this).find('option:selected').text();
@@ -181,12 +186,12 @@ $(document).on('change', '.markas', function() {
             status_id: selectedStatus
         },
         dataType: "json",
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error("Error updating task status:", error);
         }
     });
 });
-$('#createTaskBtn').on('click', function(e) {
+$('#createTaskBtn').on('click', function (e) {
     e.preventDefault();
     var title = $('#title').val().trim();
     var description = $('#description').val().trim();
@@ -207,7 +212,7 @@ $('#createTaskBtn').on('click', function(e) {
             assignee_name: assignee,
             category: category
         },
-        success: function(response) {
+        success: function (response) {
             try {
                 var res = JSON.parse(response);
                 if (res.status === 'success') {
@@ -221,17 +226,17 @@ $('#createTaskBtn').on('click', function(e) {
                 alert("Something went wrong.");
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error('Error creating task:', error);
             alert('Failed to create task');
         }
     });
 });
-$('#cancelTaskBtn').on('click', function(e) {
+$('#cancelTaskBtn').on('click', function (e) {
     e.preventDefault();
     window.location.href = base_url + "admin/task_list";
 });
-$(document).ready(function() {
+$(document).ready(function () {
     if (ctrl_page.length > 3 && ctrl_page[3] === 'task_list') {
         get_activeTaskStatus([], loadTasks);
     }
