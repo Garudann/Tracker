@@ -64,103 +64,46 @@ function loadTasks() {
             console.log("Tasks list", tasks);
             if (!taskTable) {
                 taskTable = $('#taskTable').DataTable({
-                    "columnDefs": [
+                    columnDefs: [
                         { targets: [1, 2, 3, 4, 5], className: 'dt-body-left' },
                         { targets: [0], className: 'dt-body-center' },
                         { targets: [6], className: 'actions' }
                     ],
-                    "ordering": true,
-                    "paging": true,
-                    "searching": true,
-                    "autoWidth": false,
-                    "createdRow": function (row, data, dataIndex) {
-                        var status = $(row).find("select.markas option:selected").text() || data[3];
+                    ordering: true,
+                    paging: true,
+                    searching: true,
+                    autoWidth: false,
+                    createdRow: function (row, data) {
                         $(row).css('color', 'white');
                     },
-                    "initComplete": function () {
+                    initComplete: function () {
                         $('.dataTables_paginate .paginate_button a').css('color', 'white');
                     }
                 });
-
-                $('#taskTable_length').css({
-                    'display': 'flex',
-                    'justify-content': 'end',
-                    'align-items': 'center',
-                    'margin-bottom': '10px',
-                    'gap': '8px'
-                });
-                $('#taskTable_length label').css({
-                    'font-weight': 'bold',
-                    'color': '#ffffffff'
-                });
-                $('#taskTable_length select').css({
-                    'border': '1px solid #666',
-                    'border-radius': '6px',
-                    'padding': '4px 8px',
-                    'background': 'transparent',
-                    'color': '#ffffff',
-                    'cursor': 'pointer'
-                });
-                $('#taskTable_length select option').css({
-                    'background-color': '#333',
-                    'color': '#fff',
-                    'font-size': '14px',
-                    'padding': '5px'
-                });
+                $('#taskTable_length').css({ 'display': 'flex', 'justify-content': 'end', 'align-items': 'center', 'margin-bottom': '10px', 'gap': '8px' });
+                $('#taskTable_length label').css({ 'font-weight': 'bold', 'color': '#ffffff' });
+                $('#taskTable_length select').css({ 'border': '1px solid #666', 'border-radius': '6px', 'padding': '4px 8px', 'background': 'transparent', 'color': '#ffffff', 'cursor': 'pointer' });
+                $('#taskTable_length select option').css({ 'background-color': '#333', 'color': '#fff', 'font-size': '14px', 'padding': '5px' });
             }
             $('#taskTable').on('draw.dt', function () {
-                $('.markas').css({
-                    'background-color': '#222',
-                    'color': '#fff',
-                    'border': '1px solid #555',
-                    'border-radius': '6px',
-                    'padding': '4px 8px',
-                    'font-size': '14px',
-                    'cursor': 'pointer',
-                    'width': '100%',
-                    'outline': 'none'
-                });
-
-                $('.markas option').css({
-                    'background-color': '#333',
-                    'color': '#fff'
-                });
+                $('.markas').css({ 'background-color': '#222', 'color': '#fff', 'border': '1px solid #555', 'border-radius': '6px', 'padding': '4px 8px', 'font-size': '14px', 'cursor': 'pointer', 'width': '100%', 'outline': 'none' });
+                $('.markas option').css({ 'background-color': '#333', 'color': '#fff' });
             });
 
             taskTable.clear();
             if (!tasks || tasks.length === 0) {
-                taskTable.row.add([
-                    'No data', 'No data', 'No tasks found', 'No data', 'No data', 'No data', 'No data'
-                ]).draw(false);
+                taskTable.row.add(['No data', 'No data', 'No tasks found', 'No data', 'No data', 'No data', 'No data']).draw(false);
             } else {
                 tasks.forEach(function (task) {
-                    var statusOptions = '<select class="markas" data-task-id="' + task.id + '">';
-                    statusOptions += '<option value="">Select Status</option>';
+                    var statusOptions = `<select class="markas" data-task-id="${task.id}"><option value="">Select Status</option>`;
                     taskStatuses.forEach(function (status) {
-                        var selected = (status.id == task.status_id) ? 'selected' : '';
-                        statusOptions += `<option value="${status.id}" ${selected}>${status.name}</option>`;
+                        statusOptions += `<option value="${status.id}" ${status.id === task.status_id ? 'selected' : ''}>${status.name}</option>`;
                     });
                     statusOptions += '</select>';
-                    var statusCell = (task.created_by == currentUserId || task.assignto == currentUserId)
-                        ? statusOptions
-                        : task.status || '';
-                    var actions = (task.created_by == currentUserId || task.assignto == currentUserId)
-                        ? `<a href="#" class="edit-link">Edit</a> | <a href="#" class="delete-link">Delete</a>`
-                        : `<span style="color:#aaa;">No actions</span>`;
-                    if (task.status_id == 6) {
-                        $('.markas').prop('disabled', true);
-                    } else {
-                        $('.markas').prop('disabled', false);
-                    }
-                    taskTable.row.add([
-                        task.id || '',
-                        task.title || '',
-                        task.description || '',
-                        statusCell,
-                        task.created_emp || '',
-                        task.created_at || '',
-                        actions
-                    ]).draw(false);
+                    var statusCell = (task.created_by === currentUserId || task.assignto === currentUserId) ? statusOptions : task.status || '';
+                    var actions = (task.created_by === currentUserId || task.assignto === currentUserId) ? `<a href="#" class="edit-link">Edit</a> | <a href="#" class="delete-link">Delete</a>` : `<span style="color:#aaa;">No actions</span>`;
+                    $('.markas').prop('disabled', task.status_id === 6);
+                    taskTable.row.add([task.id || '', task.title || '', task.description || '', statusCell, task.created_emp || '', task.created_at || '', actions]).draw(false);
                 });
             }
         },
