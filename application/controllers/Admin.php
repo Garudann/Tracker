@@ -108,4 +108,12 @@ class Admin extends CI_Controller {
         }
     }
 
+    function user(){
+        $this->load->model('Admin_Model');
+        if (!$this->session->userdata('uid')) {
+            echo json_encode([]);
+            return;
+        }
+        $this->load->view('admin/user');
+    }
 }

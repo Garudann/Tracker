@@ -4,35 +4,11 @@
         <li onclick="window.location.href='<?= base_url('admin/dashboard'); ?>'">Home</li>
         <li onclick="window.location.href='<?= base_url('admin/task_list'); ?>'">Tasks</li>
         <li onclick="window.location.href='#'">Analytics</li>
-        <li onclick="window.location.href='#'">User Profile</li>
+        <li onclick="window.location.href='<?= base_url('admin/user'); ?>'">User</li>
         <li onclick="window.location.href='#'">Settings</li>
-
-        <?php if (isset($_SESSION['profile']) && $_SESSION['profile'] == 0): ?>
-        <li class="dropdown">
-            <div class="dropdown-toggle" onclick="toggleDropdown(event)">Manage Users</div>
-            <ul class="dropdown-menu">
-                <li onclick="window.location.href='#'">Add User</li>
-                <li onclick="window.location.href='#'">View Users</li>
-            </ul>
-        </li>
-        <?php endif; ?>
-
         <li onclick="window.location.href='<?= base_url('login/logout'); ?>'">Logout</li>
     </ul>
 </div>
-
-<script>
-function toggleDropdown(event) {
-    document.querySelectorAll('.dropdown-menu').forEach(menu => {
-        if (menu !== event.currentTarget.closest('.dropdown').querySelector('.dropdown-menu')) {
-            menu.style.display = "none";
-        }
-    });
-    var dropdown = event.currentTarget.closest('.dropdown');
-    var menu = dropdown.querySelector('.dropdown-menu');
-    menu.style.display = (menu.style.display === "block") ? "none" : "block";
-}
-</script>
 
 <style>
 html, body { height: 100%; margin: 0; padding: 0; }

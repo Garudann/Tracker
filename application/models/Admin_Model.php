@@ -46,4 +46,11 @@ class Admin_model extends CI_Model {
         return $this->db->query($sql)->result();
     }
 
+    function get_all_users(){
+        $sql = "SELECT id, name, username, is_active, mobile
+        FROM employee
+        Where is_active=1";
+        return $this->db->query($sql)->result();
+    }
+
 }
