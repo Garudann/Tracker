@@ -7,7 +7,7 @@ function get_activeTaskStatus(selectIds = ['#status', '#markas'], callback = nul
         method: "GET",
         dataType: "json",
         success: function (data) {
-            // console.log("Active task statuses:", data);
+            console.log("Active task statuses:", data);
             taskStatuses = data || [];
             selectIds.forEach(function (id) {
                 var select = $(id);

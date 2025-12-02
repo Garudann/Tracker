@@ -33,7 +33,7 @@ class Admin_model extends CI_Model {
     }
 
     public function get_active_employees() {
-        $sql = "SELECT id, name FROM employee WHERE is_active = 1";
+        $sql = "SELECT id, name,mobile, username, date(Joined_date) as join_date, profile, is_active FROM employee WHERE is_active = 1";
         return $this->db->query($sql)->result();
     }
 
