@@ -1,47 +1,55 @@
-var ctrl_page = window.location.pathname.split('/');
-$(document).ready(function() {
-    if (ctrl_page[3] === 'user') {
-        get_active_employees();
-    }
+var userTable;
+$(document).ready(function () {
+    loadEmployees();
 });
-function get_active_employees() {
-    $("#employee_list").html('<tr><td colspan="5">Loading...</td></tr>');
+function loadEmployees() {
     $.ajax({
-        url: base_url + "admin/get_active_employees",
+        url: base_url + "Admin/get_active_employees",
         method: "GET",
         dataType: "json",
-        success: function (data) {
-            let html = "";
-            if (data.length > 0) {
-                data.forEach(function (emp, index) {
-                    html += `
-                        <tr>
-                            <td>${emp.id}</td>
-                            <td>${emp.name}</td>
-                            <td>${emp.mobile}</td>
-                            <td>${emp.username}</td>
-                            <td>${emp.join_date}</td>
-                            <td>${emp.profile}</td>
-                            <td>${emp.is_active}</td>
-                        </tr>
-                    `;
+        success: function (employees) {
+            if (!Array.isArray(employees)) {
+                console.error("Invalid data format");
+                return;
+            }
+            if (!userTable) {
+                userTable = $('#userTable').DataTable({
+                    paging: true,
+                    searching: true,
+                    info: true,
+                    autoWidth: false,
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            className: 'dt-body-center'
+                        }
+                    ]
+                });
+            }
+            userTable.clear();
+            if (employees.length > 0) {
+                employees.forEach(emp => {
+                    userTable.row.add([
+                        emp.id || '',
+                        emp.name || '',
+                        emp.mobile || '',
+                        emp.username || '',
+                        emp.join_date || '',
+                        emp.profile || '',
+                        emp.is_active || ''
+                    ]);
                 });
             } else {
-                html = `
-                    <tr>
-                        <td colspan="5">No active employees found</td>
-                    </tr>
-                `;
+                userTable.row.add([
+                    'No data','No data','No data',
+                    'No data','No data','No data','No data'
+                ]);
             }
-            $("#employee_list").html(html);
+            userTable.draw(false);
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            $("#employee_list").html(`
-                <tr>
-                    <td colspan="5" style="color:red;">Failed to load employees</td>
-                </tr>
-            `);
+            console.error("AJAX error:", error);
+            alert("Failed to load employees.");
         }
     });
 }

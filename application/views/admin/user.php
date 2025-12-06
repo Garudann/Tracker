@@ -17,12 +17,13 @@
                     <th>Date of Join</th>
                     <th>Profile</th>
                     <th>Status</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
-        <p id="noTasksMessage" style="text-align:center; color:#ddd; display:none;">No tasks found.</p>
+        <p id="noTasksMessage" style="text-align:center; color:#ddd; display:none;">
+            No tasks found.
+        </p>
     </div>
 </div>
 <style>
@@ -76,11 +77,13 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    background: rgba(255,255,255,0.02);
 }
 table th, table td {
     padding: 10px;
     text-align: left;
     border: 1px solid #cfc4c4ff;
+    color: #fff;
 }
 table th { backdrop-filter: blur(5px); color: white; text-align: center; }
 .actions a {
@@ -94,15 +97,22 @@ table th { backdrop-filter: blur(5px); color: white; text-align: center; }
     to { opacity: 1; transform: translateY(0); }
 }
 .container { animation: fadeIn 1.2s ease-in-out; }
+.dataTables_wrapper .dataTables_filter input {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #fff;
+}
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: #ddd;
+}
 </style>
+<script>
+    var base_url = "<?= base_url(); ?>";
+    var currentUserId = "<?= $this->session->userdata('uid'); ?>";
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script>
-    var base_url = "<?= base_url(); ?>";
-</script>
 <script src="<?= base_url('assets/js/user.js'); ?>"></script>
 <script src="<?= base_url('assets/js/general.js'); ?>"></script>
-<script>
-    var currentUserId = "<?= $this->session->userdata('uid'); ?>";
-</script> 
