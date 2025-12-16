@@ -39,6 +39,12 @@ class Admin extends CI_Controller {
         }
         $this->load->view('admin/add_task');
     }
+    public function Add_user() {
+        if (!$this->session->userdata('uid')) {
+            redirect('login');
+        }
+        $this->load->view('admin/add_user');
+    }
 
     public function get_active_employees() {
         if (!$this->session->userdata('uid')) {

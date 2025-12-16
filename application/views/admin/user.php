@@ -5,7 +5,7 @@
 <?php $this->load->view('includes/sidebar'); ?>
 <div class="main-content">
     <h2>User List</h2>
-    <a href="#" class="add-user">+ Add New User</a>
+    <a href="<?= base_url('admin/add_user'); ?>" class="add-user">+ Add New User</a>
     <div class="container">
         <table id="userTable">
             <thead>
