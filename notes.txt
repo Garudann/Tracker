@@ -98,3 +98,29 @@ class Admin_users extends CI_Controller {
         echo "Email verified successfully. You can now login.";
     }
 }
+
+class User_model extends CI_Model {
+
+    public function insert($data)
+    {
+        $this->db->insert('users', $data);
+        return $this->db->insert_id();
+    }
+
+    public function get_by_token($token)
+    {
+        return $this->db
+            ->where('verification_token', $token)
+            ->where('is_verified', 0)
+            ->get('users')
+            ->row();
+    }
+
+    public function verify_user($id)
+    {
+        return $this->db->where('id', $id)->update('users', [
+            'is_verified' => 1,
+            'verification_token' => NULL
+        ]);
+    }
+}
