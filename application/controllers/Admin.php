@@ -14,6 +14,14 @@ class Admin extends CI_Controller {
         //echo "<pre>";print_r($this->session->userdata());
         $this->load->view('admin/dashboard');
     }
+    public function analytics() {
+        //echo "<pre>";print_r($this->session->userdata());
+        $this->load->view('admin/analytics');
+    }
+    public function settings() {
+        //echo "<pre>";print_r($this->session->userdata());
+        $this->load->view('admin/settings');
+    }
 
     public function task_list() {
         if (!$this->session->userdata('uid')) {

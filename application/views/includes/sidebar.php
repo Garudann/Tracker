@@ -3,9 +3,9 @@
     <ul>
         <li onclick="window.location.href='<?= base_url('admin/dashboard'); ?>'">Home</li>
         <li onclick="window.location.href='<?= base_url('admin/task_list'); ?>'">Tasks</li>
-        <li onclick="window.location.href='#'">Analytics</li>
+        <li onclick="window.location.href='<?= base_url('admin/analytics'); ?>'">Analytics</li>
         <li onclick="window.location.href='<?= base_url('admin/user'); ?>'">User</li>
-        <li onclick="window.location.href='#'">Settings</li>
+        <li onclick="window.location.href='<?= base_url('admin/settings'); ?>'">Settings</li>
         <li onclick="window.location.href='<?= base_url('login/logout'); ?>'">Logout</li>
     </ul>
 </div>
